@@ -22,13 +22,11 @@ func (l *DBLink) Insert(table string, pairs map[string]interface{}) error {
 		fields       []string
 		placeholders []string
 		parameters   []interface{}
-		i            uint
 	)
 
 	for k, v := range pairs {
 		fields = append(fields, k)
-		i++
-		placeholders = append(placeholders, fmt.Sprintf("$%d", i))
+		placeholders = append(placeholders, `?`)
 		parameters = append(parameters, v)
 	}
 

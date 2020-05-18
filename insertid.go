@@ -10,7 +10,7 @@ import (
 
 // InsertID inserts a new record into given table and returns the last inserted id
 // The 3rd param is the optional field name. If not given, the default value "id" will be used
-func (l *DBLink) InsertID(table string, pairs map[string]interface{}, idFieldName ...string) (int64, error) {
+func (l *DBLink) InsertID(table string, pairs map[string]interface{}) (int64, error) {
 	if !l.supposedReady {
 		return 0, fmt.Errorf("connection not properly initialized")
 	}
@@ -23,36 +23,33 @@ func (l *DBLink) InsertID(table string, pairs map[string]interface{}, idFieldNam
 		fields       []string
 		placeholders []string
 		parameters   []interface{}
-		i            uint
 	)
-
-	idField := "id"
-
-	for _, x := range idFieldName {
-		idField = x
-		break
-	}
 
 	for k, v := range pairs {
 		fields = append(fields, k)
-		i++
-		placeholders = append(placeholders, fmt.Sprintf("$%d", i))
+		placeholders = append(placeholders, `?`)
 		parameters = append(parameters, v)
 	}
 
-	sqlQuery := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s) RETURNING %s", table, strings.Join(fields, ","), strings.Join(placeholders, ","), idField)
+	sqlQuery := fmt.Sprintf("INSERT INTO %s (%s) VALUES (%s)", table, strings.Join(fields, ","), strings.Join(placeholders, ","))
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(l.executionTimeoutSeconds)*time.Second)
 
 	defer cancel()
 
-	var lastInsertedID int64
+	rs, err := l.db.ExecContext(ctx, sqlQuery, parameters...)
 
-	if err := l.db.QueryRowContext(ctx, sqlQuery, parameters...).Scan(&lastInsertedID); err != nil {
+	if err != nil {
 		l.log(`mysqlkebab.InsertID %s db.QueryRowContext has failed: "%v"`, table, err)
 
 		return 0, err
 	}
 
-	return lastInsertedID, nil
+	lstid, err0 := rs.LastInsertId()
+
+	if err0 != nil {
+		return 0, err0
+	}
+
+	return lstid, nil
 }

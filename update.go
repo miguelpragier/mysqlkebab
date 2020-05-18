@@ -29,19 +29,16 @@ func (l *DBLink) Update(table string, updatePairs map[string]interface{}, whereP
 	var (
 		fields      []string
 		whereFields []string
-		i           uint
 		values      []interface{}
 	)
 
 	for l, v := range updatePairs {
-		i++
-		fields = append(fields, fmt.Sprintf("%s=$%d", l, i))
+		fields = append(fields, fmt.Sprintf("%s=?", l))
 		values = append(values, v)
 	}
 
 	for l, v := range wherePairs {
-		i++
-		whereFields = append(whereFields, fmt.Sprintf("%s=$%d", l, i))
+		whereFields = append(whereFields, fmt.Sprintf("%s=?", l))
 		values = append(values, v)
 	}
 

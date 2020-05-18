@@ -23,12 +23,10 @@ func (l *DBLink) Delete(table string, wherePairs map[string]interface{}) (int64,
 	var (
 		whereList  []string
 		parameters []interface{}
-		i          uint
 	)
 
 	for k, v := range wherePairs {
-		i++
-		s := fmt.Sprintf("%s=$%d", k, i)
+		s := fmt.Sprintf("%s=?", k)
 		whereList = append(whereList, s)
 		parameters = append(parameters, v)
 	}
