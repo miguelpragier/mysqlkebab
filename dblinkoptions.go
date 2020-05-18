@@ -11,8 +11,8 @@ type DBLinkOptions struct {
 	// connectionAttemptsMaxMinutes determines how much time the engine keeps trying to (re)connect before fail with an error
 	// Zero means retry indefinitely or until connectionAttemptsMax is reached
 	connectionAttemptsMaxMinutes uint
-	// timeBetweenConnectionAttemptsSeconds - How much time between connection attempts
-	timeBetweenConnectionAttemptsSeconds uint
+	// secondsBetweenConnectionAttempts - How much time between connection attempts
+	secondsBetweenConnectionAttempts uint
 	// database connectionString
 	connectionString *ConnectionString
 	// connectionTimeoutSeconds Seconds to wait for (re)connection
@@ -36,8 +36,8 @@ func (o *DBLinkOptions) validate() error {
 		return err
 	}
 
-	if o.timeBetweenConnectionAttemptsSeconds < 1 {
-		o.timeBetweenConnectionAttemptsSeconds = timeBetweenConnectionAttemptsSecondsDefault
+	if o.secondsBetweenConnectionAttempts < 1 {
+		o.secondsBetweenConnectionAttempts = timeBetweenConnectionAttemptsSecondsDefault
 	}
 
 	if o.connectionTimeoutSeconds == 0 {
@@ -61,7 +61,7 @@ func (o DBLinkOptions) print() {
 	fmt.Println(`mysqlkebab Options:`)
 	fmt.Printf("-- Max (Re)Connection Attempts: %d\n", o.connectionAttemptsMax)
 	fmt.Printf("-- Max (Re)Connection Attempts in minutes: %d\n", o.connectionAttemptsMaxMinutes)
-	fmt.Printf("-- Seconds between attempts: %d\n", o.timeBetweenConnectionAttemptsSeconds)
+	fmt.Printf("-- Seconds between attempts: %d\n", o.secondsBetweenConnectionAttempts)
 	fmt.Printf("-- Connection Timeout in seconds: %d\n", o.connectionTimeoutSeconds)
 	fmt.Printf("-- Execution timeout in seconds: %d\n", o.executionTimeoutSeconds)
 	fmt.Println("-- If you can see this summary, mysqlkebab was initialized with [debugPrint] option on")
@@ -75,13 +75,13 @@ func (o DBLinkOptions) print() {
 // debugPrint if true, prints debug/log messages to stdout with stdlib log.Printf() function
 func Options(cs *ConnectionString, connTimeout, execTimeout, connAttemptsMax, connAttemptsMaxMinutes, secondsBetweenReconnectionAttempts uint, debugPrint bool) *DBLinkOptions {
 	return &DBLinkOptions{
-		connectionString:                     cs,
-		connectionTimeoutSeconds:             connTimeout,
-		executionTimeoutSeconds:              execTimeout,
-		connectionAttemptsMax:                connAttemptsMax,
-		connectionAttemptsMaxMinutes:         connAttemptsMaxMinutes,
-		timeBetweenConnectionAttemptsSeconds: secondsBetweenReconnectionAttempts,
-		debugPrint:                           debugPrint,
-		emergencyCallback:                    nil,
+		connectionString:                 cs,
+		connectionTimeoutSeconds:         connTimeout,
+		executionTimeoutSeconds:          execTimeout,
+		connectionAttemptsMax:            connAttemptsMax,
+		connectionAttemptsMaxMinutes:     connAttemptsMaxMinutes,
+		secondsBetweenConnectionAttempts: secondsBetweenReconnectionAttempts,
+		debugPrint:                       debugPrint,
+		emergencyCallback:                nil,
 	}
 }

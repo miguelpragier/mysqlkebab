@@ -72,10 +72,10 @@ func (l *DBLink) connectLoop() error {
 
 	waitNextAttempt := func() {
 		if l.debugPrint {
-			log.Printf("wating %d seconds before retry to connect database.", l.timeBetweenConnectionAttemptsSeconds)
+			log.Printf("wating %d seconds before retry to connect database.", l.secondsBetweenConnectionAttempts)
 		}
 
-		time.Sleep(time.Duration(l.timeBetweenConnectionAttemptsSeconds) * time.Second)
+		time.Sleep(time.Duration(l.secondsBetweenConnectionAttempts) * time.Second)
 	}
 
 	for {
