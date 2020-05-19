@@ -5,8 +5,6 @@ import (
 	"database/sql"
 	"fmt"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 // MustGetTimef returns the query result's single value as a formatted time.Time, considering the given format string

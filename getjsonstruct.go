@@ -5,8 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
-
-	_ "github.com/go-sql-driver/mysql"
 )
 
 // MustGetJSONStruct tries to scan query result's single column value into given struct

@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// Row is A single tuple with some methods
 type Row struct {
 	tuple map[string]interface{}
 }
@@ -97,7 +98,7 @@ func (r Row) Int64(key string) int64 {
 }
 
 // Float64 returns the specified field as float64
-// Check for convertion details: https://stackoverflow.com/questions/31946344/why-does-go-treat-a-postgresql-numeric-decimal-columns-as-uint8
+// Check for conversion details: https://stackoverflow.com/questions/31946344/why-does-go-treat-a-postgresql-numeric-decimal-columns-as-uint8
 func (r Row) Float64(key string) float64 {
 	if !r.has(key) {
 		return 0
