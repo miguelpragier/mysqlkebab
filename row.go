@@ -61,7 +61,7 @@ func (r Row) String(key string) string {
 	case bool:
 		return fmt.Sprintf("%t", x)
 	case []byte:
-		return fmt.Sprintf("%q", x)
+		return string(x)
 	}
 
 	return ""
